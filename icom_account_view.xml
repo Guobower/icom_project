@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+	<record model="ir.ui.view" id="icom_view_account_analytic_account_form1">
+        <field name="name">icom.account.analytic.account.tree</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+            <group name='main' position="inside">
+            	<group string="Renewal">
+           			<field name="date_start"/>
+                    <field name="date"/>
+            	</group>
+            </group>
+        </field>
+    </record>
+    
+	<record model="ir.ui.view" id="icom_view_edit_project_form">
+        <field name="name">icom.project.project.tree</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+        	<xpath expr="//sheet" position="before">
+        		<header>
+        			<field name="state" widget="statusbar" clickable="True"/>
+        		</header>
+        	</xpath>
+        	<xpath expr="//page" position="before">
+        		<page string="Team" name="team">
+                    <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}">
+                        <kanban quick_create="false" create="true" delete="true">
+                            <field name="name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div style="position: relative">
+                                        <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                        <div class="oe_module_vignette">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                            <div class="oe_module_desc">
+                                                <field name="name"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </page>
+        	</xpath>
+        	
+            <xpath expr="//page/group" position="after">
+            	<group string="Renewal">
+            		<label for="date_start"/>
+            		<div name="duration">
+            			<field name="date_start"  class="oe_inline"/>
+            		</div>
+                    <label for="date" string="End Date"/>
+                    <div name="duration">
+	                    <field name="date" class="oe_inline"/>
+	                </div>
+            	</group>
+            </xpath>
+            
+            <xpath expr="//page" position="after">
+	            <page string="Project Stages" name="project_stage">
+	       			<group col="4" colspan="1">
+	       				<field name="type_ids" nolabel="1"/>
+	       			</group>
+	       		</page>
+	       	</xpath>
+            
+        </field>
+    </record>
+    
+
+    <!-- Permet d'ajouter la semaine sur la vue 'Comptabilité / Ligne d'écritures analytiques' -->
+    <record model="ir.ui.view" id="icom_view_account_analytic_line_tree">
+        <field name="name">icom.account.analytic.line.tree</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="date" position="after">
+              <field name="week_date"/>
+            </field>
+        </field>
+    </record>
+
+
+    <!-- Permet d'ajouter le regroupement par semaine -->
+    <record id="icom_view_account_analytic_line_filter" model="ir.ui.view">
+        <field name="name">icom.account.analytic.line.select</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
+        <field name="arch" type="xml">
+
+          <!-- Permet d'ajouter un filtre sur la semaine -->
+          <field name="date" position="after">
+            <field name="week_date"/>
+          </field>
+
+          <!-- Permet d'ajouter un regroupement sur la semaine -->
+          <xpath expr="//group/filter[@name='group_date']" position="after">
+              <filter string="Semaine" domain="[]" context="{'group_by':'week_date'}"/>
+          </xpath>                                    
+
+        </field>
+    </record>
+
+	<menuitem id="menu_project_facturation1" sequence="20" 
+		parent="project.menu_main_pm"
+		name="Facturation" 
+		groups="base.group_user"/>
+	<menuitem id="menu_project_analytic1" sequence="10" 
+		parent="menu_project_facturation1" 
+		name="Contrats à renouveler" 
+		action="analytic.action_account_analytic_account_form"
+		groups="base.group_user"/>
+	<menuitem id="menu_project_analytic_ln1" sequence="20" 
+		parent="menu_project_facturation1" 
+		name="Facturer les tâches" 
+		action="analytic.account_analytic_line_action_entries"
+		groups="base.group_user"/>
+		
+		
+	
+
+
+</data>
+</openerp>
+
+

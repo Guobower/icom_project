@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<menuitem
+	        name="Recruitment"
+	        id="hr_recruitment.menu_hr_recruitment_root"
+	        parent="hr.menu_hr_root"
+	        groups="hr_recruitment.group_hr_recruitment_user"
+	        sequence="80"/>
+	        
+	    <menuitem id="hr_timesheet.timesheet_menu_root" 
+	    	name="Time Tracking" 
+	    	parent="hr.menu_hr_root"
+	    	sequence="82" 
+	    	groups="base.group_user" 
+	    	/>
+	    	
+	    <menuitem id="hr_attendance.menu_hr_attendance_root" 
+	    	name="Attendances" 
+	    	parent="hr.menu_hr_root"
+	    	sequence="84" 
+	    	groups="hr.group_hr_attendance" 
+	    	/>
+	    	
+	    <menuitem id="hr_expense.menu_hr_expense_root" 
+	    	parent="hr.menu_hr_root"
+	    	name="Expenses" 
+	    	sequence="86"/>
+	    	
+	    <menuitem
+            name="Leaves"
+            id="hr_holidays.menu_hr_holidays_root"
+            parent="hr.menu_hr_root"
+            sequence="88"
+            groups="base.group_user"/>
+            
+       <menuitem id="utm.menu_link_tracker_root"     
+       		sequence="25"  
+       		name="Link Tracker" 
+       		parent="icom_crm.menu_icom_crm"
+       		groups="base.group_no_one"/>
+       		
+       <menuitem name="Marketing" 
+       		id="marketing_campaign.menu_marketing_campaign_root" 
+       		groups="marketing_campaign.group_lead_automation_user,marketing_campaign.group_lead_automation_manager" 
+       		sequence="10"/>
+       		
+       <menuitem name="Surveys" 
+       		id="survey.menu_surveys" 
+       		parent="marketing_campaign.menu_marketing_campaign_root"
+       		sequence="30" 
+       		groups="survey.group_survey_user"  
+       		/>
+       		
+       		
+	</data>
+</odoo>

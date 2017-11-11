@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- Cette vue permet de surcharger la vue de création des opportunité en ajoutant le bouton de création des projets -->
+    <record model="ir.ui.view" id="icom_crm_case_form_view_oppor">
+        <field name="name">iCom - CRM - Opportunities</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <data>
+
+                <!-- Bouton gris à droite pour créer un projet avec ma nouvelle action ajoutée au modèle -->
+                <xpath expr="/form/sheet/div/button" position="before">
+                    <button string="Convertir en Projet" name="action_Lead2Project" type="object" />
+                </xpath>
+
+            </data>
+        </field>
+    </record>
+
+
+
+    <!-- Cette nouvelle action permet d'accèder directement à la création d'un projet sans passer par la liste et le bouton 'Créer' 
+         Cela est utilisé par le bouton pemrettant de créer un projet à partir d'une opportunité -->
+    <record id="icom_action_create_project" model="ir.actions.act_window">
+        <field name="name">Creation projet</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">form,gantt,calendar,kanban,tree</field>
+    </record>
+
+
+
+
+
+
+    </data>
+</openerp>
