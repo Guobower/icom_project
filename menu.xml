@@ -1,57 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-    	<menuitem
-	        name="Recruitment"
-	        id="hr_recruitment.menu_hr_recruitment_root"
-	        parent="hr.menu_hr_root"
-	        groups="hr_recruitment.group_hr_recruitment_user"
-	        sequence="80"/>
-	        
-	    <menuitem id="hr_timesheet.timesheet_menu_root" 
-	    	name="Time Tracking" 
-	    	parent="hr.menu_hr_root"
-	    	sequence="82" 
-	    	groups="base.group_user" 
-	    	/>
-	    	
-	    <menuitem id="hr_attendance.menu_hr_attendance_root" 
-	    	name="Attendances" 
-	    	parent="hr.menu_hr_root"
-	    	sequence="84" 
-	    	groups="hr.group_hr_attendance" 
-	    	/>
-	    	
-	    <menuitem id="hr_expense.menu_hr_expense_root" 
-	    	parent="hr.menu_hr_root"
-	    	name="Expenses" 
-	    	sequence="86"/>
-	    	
-	    <menuitem
+
+        <!--TODO : Cette méthode par accèder à l'action en cours ne fonctionne pas,
+        car elle necessite le rafraichissement du navigateur pour changer l'url du menu
+        -->
+        <!--
+        <record model="ir.actions.act_url" id="is_tache_en_cours_url">
+            <field name="name">is_tache_en_cours_url</field>
+            <field name="url">is_tache_en_cours_url</field>
+            <field name="type">ir.actions.act_url</field>
+        </record>
+        -->
+
+
+        <!-- Tâche en cours -->
+        <record id="is_tache_en_cours_action" model="ir.actions.server">
+            <field name="name">Tâche en cours </field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_project_task" />
+            <field name="state">code</field>
+            <field name="code">
+                action=env['project.task'].tache_en_cours_action()
+            </field>
+        </record>
+        <menuitem
+            name="Tâche en cours"
+            id="is_tache_en_cours_menu"
+            action="is_tache_en_cours_action"
+            parent="project.menu_project_management"
+            sequence="40"/>
+
+
+
+        <menuitem 
+            id="is_travaux_des_taches_menu" 
+            parent="project.menu_project_management" 
+            action="is_travaux_des_taches_action"
+            name="Travaux des taĉhes" 
+            sequence="8"/>
+
+
+
+
+        <!-- Masquer (déplacer) le menu 'Incident' qui n'est pas utilisé -->
+        <menuitem id="project_issue.menu_project_issue_track" parent="base.menu_custom"/>
+
+
+
+
+
+
+        <menuitem
+            name="Recruitment"
+            id="hr_recruitment.menu_hr_recruitment_root"
+            parent="hr.menu_hr_root"
+            groups="hr_recruitment.group_hr_recruitment_user"
+            sequence="80"/>
+        <menuitem
+            name="Recruitment"
+            id="hr_recruitment.menu_hr_recruitment_root"
+            parent="hr.menu_hr_root"
+            groups="hr_recruitment.group_hr_recruitment_user"
+            sequence="80"/>
+        <menuitem id="hr_timesheet.timesheet_menu_root" 
+            name="Time Tracking" 
+            parent="hr.menu_hr_root"
+            sequence="82" 
+            groups="base.group_user" 
+            />
+        <menuitem id="hr_attendance.menu_hr_attendance_root" 
+            name="Attendances" 
+            parent="hr.menu_hr_root"
+            sequence="84" 
+            groups="hr.group_hr_attendance" 
+            />
+        <menuitem id="hr_expense.menu_hr_expense_root" 
+            parent="hr.menu_hr_root"
+            name="Expenses" 
+            sequence="86"/>
+        <menuitem
             name="Leaves"
             id="hr_holidays.menu_hr_holidays_root"
             parent="hr.menu_hr_root"
             sequence="88"
             groups="base.group_user"/>
-            
        <menuitem id="utm.menu_link_tracker_root"     
-       		sequence="25"  
-       		name="Link Tracker" 
-       		parent="icom_crm.menu_icom_crm"
-       		groups="base.group_no_one"/>
-       		
+               sequence="25"  
+               name="Link Tracker" 
+               parent="icom_crm.menu_icom_crm"
+               groups="base.group_no_one"/>
        <menuitem name="Marketing" 
-       		id="marketing_campaign.menu_marketing_campaign_root" 
-       		groups="marketing_campaign.group_lead_automation_user,marketing_campaign.group_lead_automation_manager" 
-       		sequence="10"/>
-       		
+               id="marketing_campaign.menu_marketing_campaign_root" 
+               groups="marketing_campaign.group_lead_automation_user,marketing_campaign.group_lead_automation_manager" 
+               sequence="10"/>
        <menuitem name="Surveys" 
-       		id="survey.menu_surveys" 
-       		parent="marketing_campaign.menu_marketing_campaign_root"
-       		sequence="30" 
-       		groups="survey.group_survey_user"  
-       		/>
-       		
-       		
-	</data>
+               id="survey.menu_surveys" 
+               parent="marketing_campaign.menu_marketing_campaign_root"
+               sequence="30" 
+               groups="survey.group_survey_user"  
+               />
+               
+    </data>
 </odoo>

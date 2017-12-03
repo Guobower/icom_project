@@ -280,6 +280,100 @@
 
     <menuitem name="Tâches (i-com)" action="icom_action_view_task" id="icom_menu_action_view_task" parent="project.menu_project_management" sequence="6"/>
 
+
+
+
+
+
+
+
+    <!-- Travaux des tâches -->
+
+
+
+
+
+
+    <record id="is_hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">is_hr_timesheet_line_search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="arch" type="xml">
+
+            <field name="date" position="after">
+                <field name="week_date"/>
+
+                <filter string="Semaine" domain="[]" context="{'group_by':'date:week'}"/>
+                <filter string="Mois"    domain="[]" context="{'group_by':'date:month'}"/>
+                <filter string="Année"   domain="[]" context="{'group_by':'date:year'}"/>
+
+                <!--
+                <filter 
+                    name="date_prochain_controle_filter" 
+                    string="Date prochain contrôle dépassée" 
+                    domain="[('date_prochain_controle','&lt;=',context_today().strftime('%%Y-%%m-%%d'))]"
+                />
+                -->
+
+                <filter 
+                    name="user_filter" 
+                    string="Mes travaux" 
+                    domain="[('user_id','=',uid)]"
+                />
+
+
+
+            </field>
+
+
+        </field>
+    </record>
+
+
+
+    <record model="ir.ui.view" id="is_travaux_des_taches_tree_view">
+        <field name="name">is_travaux_des_taches_tree_view</field>
+        <field name="model">account.analytic.line</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="task_id" widget="many2one_clickable"/>
+                <field name="date"/>
+                <field name="week_date"/>
+                <field name="user_id"/>
+                <field name="name"/>
+                <field name="account_id"  invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id"  invisible="1"/>
+                <field name="unit_amount" sum="Total" widget="float_time" string="Durée"/>
+                <field name="amount"      sum="Total" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="is_travaux_des_taches_action" model="ir.actions.act_window">
+        <field name="name">Travaux des tâches</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="is_travaux_des_taches_tree_view"/>
+        <field name="context">{'search_default_user_filter':1}</field>
+    </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </data>
 </openerp>
 

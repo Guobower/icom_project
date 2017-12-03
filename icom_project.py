@@ -83,6 +83,31 @@ class Task(models.Model):
 
 
     @api.multi
+    def tache_en_cours_action(self):
+        task_id=self._compteur_en_cours()
+        if task_id:
+            res={
+                'name': u'Tâche en cours',
+                'view_mode': 'form,tree',
+                'view_type': 'form',
+                'res_id'   : task_id,
+                'res_model': 'project.task',
+                'type'     : 'ir.actions.act_window',
+            }
+        else:
+            res={
+                'name': u'Tâche en cours',
+                'view_mode': 'tree,from',
+                'view_type': 'form',
+                'res_model': 'project.task',
+                'type'     : 'ir.actions.act_window',
+                'domain'   : [('id','=',0)],
+                'help'     : 'Aucune tâche en cours',
+            }
+        return res
+
+
+    @api.multi
     def _compteur_en_cours(self):
         cr=self._cr
         sql="""
@@ -95,9 +120,6 @@ class Task(models.Model):
         for row in cr.fetchall():
             task_id=row[0]
         return task_id
-
-
-
 
 
     @api.multi
