@@ -282,18 +282,7 @@
 
 
 
-
-
-
-
-
     <!-- Travaux des tâches -->
-
-
-
-
-
-
     <record id="is_hr_timesheet_line_search" model="ir.ui.view">
         <field name="name">is_hr_timesheet_line_search</field>
         <field name="model">account.analytic.line</field>
@@ -302,33 +291,17 @@
 
             <field name="date" position="after">
                 <field name="week_date"/>
-
                 <filter string="Semaine" domain="[]" context="{'group_by':'date:week'}"/>
                 <filter string="Mois"    domain="[]" context="{'group_by':'date:month'}"/>
                 <filter string="Année"   domain="[]" context="{'group_by':'date:year'}"/>
-
-                <!--
-                <filter 
-                    name="date_prochain_controle_filter" 
-                    string="Date prochain contrôle dépassée" 
-                    domain="[('date_prochain_controle','&lt;=',context_today().strftime('%%Y-%%m-%%d'))]"
-                />
-                -->
-
                 <filter 
                     name="user_filter" 
                     string="Mes travaux" 
                     domain="[('user_id','=',uid)]"
                 />
-
-
-
             </field>
-
-
         </field>
     </record>
-
 
 
     <record model="ir.ui.view" id="is_travaux_des_taches_tree_view">
@@ -336,8 +309,9 @@
         <field name="model">account.analytic.line</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="task_id" widget="many2one_clickable"/>
+            <tree editable="top" create="0">
+                <field name="project_id" widget="many2one_clickable" readonly="1"/>
+                <field name="task_id"    widget="many2one_clickable" readonly="1"/>
                 <field name="date"/>
                 <field name="week_date"/>
                 <field name="user_id"/>
@@ -358,21 +332,6 @@
         <field name="view_id" ref="is_travaux_des_taches_tree_view"/>
         <field name="context">{'search_default_user_filter':1}</field>
     </record>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </data>
 </openerp>
