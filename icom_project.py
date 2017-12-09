@@ -210,6 +210,8 @@ class Task(models.Model):
     def reporter_solde(self):
         cr=self._cr
         for obj in self:
+            if obj.date_deadline==False:
+                raise Warning(u"Echéance non renseignée !")
             if obj.is_test_report:
                 raise Warning(u"Report déjà éffectué !")
             sql="""
