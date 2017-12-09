@@ -8,6 +8,7 @@ from dateutil import parser
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
+    _order='create_date desc'
 
     @api.multi
     @api.depends('date')

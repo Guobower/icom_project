@@ -31,25 +31,16 @@
             action="is_tache_en_cours_action"
             parent="project.menu_project_management"
             sequence="40"/>
-
-
-
         <menuitem 
             id="is_travaux_des_taches_menu" 
             parent="project.menu_project_management" 
             action="is_travaux_des_taches_action"
-            name="Travaux des taĉhes" 
+            name="Travaux des tâches" 
             sequence="8"/>
-
-
 
 
         <!-- Masquer (déplacer) le menu 'Incident' qui n'est pas utilisé -->
         <menuitem id="project_issue.menu_project_issue_track" parent="base.menu_custom"/>
-
-
-
-
 
 
         <menuitem

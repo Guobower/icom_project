@@ -310,6 +310,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree editable="top" create="0">
+                <field name="create_date" string="Date de création"/>
                 <field name="project_id" widget="many2one_clickable" readonly="1"/>
                 <field name="task_id"    widget="many2one_clickable" readonly="1"/>
                 <field name="date"/>
@@ -324,14 +325,51 @@
             </tree>
         </field>
     </record>
+
+    <record id="is_travaux_des_taches_pivot_view" model="ir.ui.view">
+        <field name="name">is_travaux_des_taches_pivot_view</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Travaux des tâches">
+                <field name="date"        type="row"/>
+                <field name="user_id"     type="col"/>
+                <field name="unit_amount" type="measure" string="Durée" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!--
     <record id="is_travaux_des_taches_action" model="ir.actions.act_window">
         <field name="name">Travaux des tâches</field>
         <field name="res_model">account.analytic.line</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="is_travaux_des_taches_tree_view"/>
         <field name="context">{'search_default_user_filter':1}</field>
     </record>
+    -->
+
+    <!-- Permet de définir 2 vues par défaut -->
+    <record id="is_travaux_des_taches_action" model="ir.actions.act_window">
+        <field name="name">Travaux des tâches</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="context">{'search_default_user_filter':1}</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="is_travaux_des_taches_action_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="is_travaux_des_taches_tree_view"/>
+        <field name="act_window_id" ref="is_travaux_des_taches_action"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="is_travaux_des_taches_action_pivot">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="is_travaux_des_taches_pivot_view"/>
+        <field name="act_window_id" ref="is_travaux_des_taches_action"/>
+    </record>
+
 
 </data>
 </openerp>
