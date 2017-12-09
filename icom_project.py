@@ -6,6 +6,21 @@ from dateutil import parser
 from openerp.exceptions import Warning
 
 
+is_type_projet = [
+    ('maintenance', 'Maintenance'),
+    ('web'        , 'Web'),
+    ('i-com'      , 'i-com'),
+]
+
+
+class Project(models.Model):
+    _inherit = 'project.project'
+    _order = 'name'
+
+    is_type_projet = fields.Selection(is_type_projet,'Type de projet')
+
+
+
 class TaskCompteurDescription(models.TransientModel):
     _name  = 'is.project.task.compteur.description'
 
@@ -78,8 +93,11 @@ class Task(models.Model):
             rec.week_date_end = semaine
 
 
-    week_date_end = fields.Char(compute='_week_date_end', string='Semaine', store=True, readonly=True)
-    compteur_ids  = fields.One2many('is.project.task.compteur'  , 'task_id', u"Compteurs")
+    week_date_end     = fields.Char(compute='_week_date_end', string='Semaine', store=True, readonly=True)
+    compteur_ids      = fields.One2many('is.project.task.compteur'  , 'task_id', u"Compteurs")
+    is_type_projet    = fields.Selection(is_type_projet,'Type de projet', related='project_id.is_type_projet', store=False, readonly=True)
+    is_test_report    = fields.Boolean(compute='_is_test_report', string='Test report', store=False, readonly=True)
+    is_heure_depassee = fields.Float(compute='_is_heure_depassee', string='Heures dépassées', store=False, readonly=True)
 
 
     @api.multi
@@ -120,6 +138,25 @@ class Task(models.Model):
         for row in cr.fetchall():
             task_id=row[0]
         return task_id
+
+
+    @api.multi
+    def _is_test_report(self):
+        for obj in self:
+            test=False
+            if obj.is_type_projet!='maintenance':
+                test=True
+            else:
+                for line in obj.timesheet_ids:
+                    if line.name==u'Report négatif trimestre précédent' or line.name==u'Report positif trimestre précédent':
+                        test=True
+            obj.is_test_report=test
+
+
+    @api.multi
+    def _is_heure_depassee(self):
+        for obj in self:
+            obj.is_heure_depassee=-obj.remaining_hours
 
 
     @api.multi
@@ -167,5 +204,59 @@ class Task(models.Model):
                     }
                     new_id=self.env['account.analytic.line'].create(vals)
                     line.unlink()
+
+
+    @api.multi
+    def reporter_solde(self):
+        cr=self._cr
+        for obj in self:
+            if obj.is_test_report:
+                raise Warning(u"Report déjà éffectué !")
+            sql="""
+                select remaining_hours
+                from project_task
+                where 
+                    project_id="""+str(obj.project_id.id)+""" and
+                    date_deadline<'"""+str(obj.date_deadline)+"""' 
+                order by date_deadline desc limit 1
+            """
+            cr.execute(sql)
+            test=False
+            report=0.0
+            for row in cr.fetchall():
+                test=True
+                report=row[0]
+            if test==False:
+                raise Warning(u"Pas de report à éffectuer (premier trimestre) !")
+
+
+            name=u'Report négatif trimestre précédent'
+            if report>=0.0:
+                name=u'Report positif trimestre précédent'
+            vals={
+                'project_id' : obj.project_id.id,
+                'task_id'    : obj.id,
+                'date'       : fields.datetime.now(),
+                'user_id'    : self._uid,
+                'unit_amount': report,
+                'name'       : name,
+            }
+            new_id=self.env['account.analytic.line'].create(vals)
+
+
+
+
+
+    @api.model
+    def create(self, vals):
+        obj = super(Task, self).create(vals)
+        planned_hours=vals.get('planned_hours',0)
+        if planned_hours==0:
+            raise Warning(u"Champ 'Heures prévues initialement' non renseigné !")
+        return obj
+
+
+
+
 
 
