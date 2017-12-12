@@ -249,13 +249,13 @@ class Task(models.Model):
 
 
 
-    @api.model
-    def create(self, vals):
-        obj = super(Task, self).create(vals)
-        planned_hours=vals.get('planned_hours',0)
-        if planned_hours==0:
-            raise Warning(u"Champ 'Heures prévues initialement' non renseigné !")
-        return obj
+#    @api.model
+#    def create(self, vals):
+#        obj = super(Task, self).create(vals)
+#        planned_hours=vals.get('planned_hours',0)
+#        if planned_hours==0:
+#            raise Warning(u"Champ 'Heures prévues initialement' non renseigné !")
+#        return obj
 
 
 
