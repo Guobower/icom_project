@@ -21,6 +21,7 @@ InfoSaône / Module Project pour i-com
         "icom_project_view.xml",
         "icom_account_view.xml",
         "icom_crm_view.xml",
+        "res_partner.xml",
         "menu.xml"
     ],
     "installable": True,
