@@ -232,15 +232,15 @@ class Task(models.Model):
                 raise Warning(u"Pas de report à éffectuer (premier trimestre) !")
 
 
-            name=u'Report négatif trimestre précédent'
-            if report>=0.0:
-                name=u'Report positif trimestre précédent'
+            name=u'Report positif trimestre précédent'
+            if report<0.0:
+                name=u'Report négatif trimestre précédent'
             vals={
                 'project_id' : obj.project_id.id,
                 'task_id'    : obj.id,
                 'date'       : fields.datetime.now(),
                 'user_id'    : self._uid,
-                'unit_amount': report,
+                'unit_amount': -report,
                 'name'       : name,
             }
             new_id=self.env['account.analytic.line'].create(vals)
